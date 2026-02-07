@@ -1,0 +1,65 @@
+Quick Start
+------------
+
+ls
+python3 --version
+sudo yum update
+
+Common command used for AWS Kinesis Agent
+------------------------------------------
+
+-- Command use for installing AWS Kinesis Agent 
+sudo yum install -y aws-kinesis-agent
+
+-- Path where configuration file of AWS Kinesis Agent is placed
+cd /etc/aws-kinesis
+
+-- Template to setup config file for AWS Kinesis Agent
+-- for endpoint of any particulare region: https://docs.aws.amazon.com/general/latest/gr/fh.html
+-- EXAMPLE: US East (N. Virginia) [ firehose.us-east-1.amazonaws.com ]
+-- ecommerece-datapipeline-kf-customers-qh
+-- ecommerece-datapipeline-kf-orders-qh
+
+cat nano.json
+sudo nano agent.json
+
+{
+  "cloudwatch.emitMetrics": true,
+  "firehose.endpoint": "firehose.us-east-1.amazonaws.com",
+  "flows": [
+    {
+      "filePattern": "/tmp/orders.csv*",
+      "deliveryStream": "ecommerece-datapipeline-kf-customers-qh",
+      "initialPosition": "START_OF_FILE"
+    },
+    {
+      "filePattern": "/tmp/customers.csv*",
+      "deliveryStream": "ecommerece-datapipeline-kf-orders-qh",
+      "initialPosition": "START_OF_FILE"
+    }
+  ]
+}
+
+
+-- Add data in temp/ directory
+cd /tmp
+
+-- Add data files there for customers/orders
+nano customers.csv ( paste some data)
+cat customers.csv ( data should be there )
+
+nano orders.csv ( paste some data )
+cat orders.csv ( data should be there )
+
+-- Command to start AWS kinesis Agent
+sudo service aws-kinesis-agent start
+
+-- Command for reading logs of AWS Kinesis Agent
+tail -f /var/log/aws-kinesis-agent/aws-kinesis-agent.log
+
+-- Command to stop AWS Kinesis Agent
+sudo service aws-kinesis-agent stop
+
+-- Command to get the status of AWS Kinesis Agent
+sudo service aws-kinesis-agent status
+

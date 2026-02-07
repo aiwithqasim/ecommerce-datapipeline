@@ -1,0 +1,52 @@
+------Using Storage Integration
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::ecommerce-datapipelie-qh/firehouse/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::ecommerce-datapipeline-qh",
+            "Condition": {
+                "StringLike": {
+                    "s3:prefix": [
+                        "firehouse/*"
+                    ]
+                }
+            }
+        }
+    ]
+}
+
+
+-- Trust Policy >> Trust relationships >> Trusted entities
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::123456789012:role/your-snowflake-role-name"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "YOUR_SNOWFLAKE_EXTERNAL_ID"
+        }
+      }
+    }
+  ]
+}
+
